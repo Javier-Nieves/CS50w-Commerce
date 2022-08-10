@@ -1,0 +1,17 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <h2>Active Listings</h2>
+    <ul>
+        {% for list in listings %}
+            {% for bid in bids %}
+                {% if bid.listing == list %}
+                <a href="listings/{{list.title}}"><img src="{{list.picture_url}}" width="300px"></a>
+                <li><a href="listings/{{list.title}}">{{list.title}}</a> Seller: {{list.seller}} - Top Bid: {{bid.current_bid}}.</li>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </ul>
+
+{% endblock body%}

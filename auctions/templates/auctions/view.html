@@ -1,0 +1,54 @@
+{% extends "auctions/layout.html" %}
+
+{% block item.title %}
+    {% for item in desc%}
+        {{item.title|safe}}
+    {% endfor %}
+{% endblock %}
+
+    {% block body %}
+        <div class="flex-container">
+            {% for item in desc%}
+            <div><h1>{{item.title}}</h1> Seller: {{item.seller}}</div>
+            <div class="parent">
+                <img src="{{item.picture_url}}" width="600px">
+                <div>
+                    <div class="descr">{{item.description}}{{name}}</div>
+                    <div class="category">Category: {{item.category}}</div>
+                </div>
+            </div>
+                <div>
+                    Starting price: {{item.price}} COP.
+                    {% for bid in bids %}
+                        {{bid.number_of_bids}} bid(s) made. 
+                        Current price: {{bid.current_bid}} COP 
+                    {% empty %}
+                    {% endfor %}
+                </div>
+            <div class="parent">
+                <div>
+                    <form action="{% url 'view' title=item.title %}" method="post">
+                        {% csrf_token %}
+                    <input type="number" min="0" name="bid" placeholder="Your Bid"> 
+                    <input type="submit" name="bid-button" value="Bid">
+                </div>
+                <div>   
+                    {% if top == "yes"%} 
+                        <h6 class="messages good" >Your bid is the highest</h6> 
+                    {% endif %}
+                    {% if message%}
+                        <h6 class="messages bad" >{{message}}</h6>
+                    {% endif %}
+                </div>
+            </div>
+                
+            {% endfor %}
+            <div class="comment-container">
+                <input type="text" name="comment" class="comment-field" placeholder="Your comment">
+                <input type="submit" name="submit-comment" value="Comment">
+            </form>
+        </div>
+    {% for com in coms %}
+        <div>{{com.autor}} : <input type="text" value="{{com.text}}"></div>
+    {% endfor %}
+{% endblock body %}
