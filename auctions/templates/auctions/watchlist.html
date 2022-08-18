@@ -1,0 +1,79 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <h1 style="text-align:center">Watchlist</h1>
+        <ul>
+
+            <div class="grid-container">
+
+                {% for list in watchlist %}
+                
+                {% if list.active %}
+                <a href="listings/{{list.title}}">
+                    <li class="watch-li">
+                        <div class="parent">
+
+                            <div class="flex-container">
+                                <img class="img-watch" src="{{list.picture_url}}">
+                                <div class="text"> {{list.title}} </div>
+                            </div>
+
+                            <div class="flex-container">
+
+                                <div>Starting price: {{list.price}} $ </div>
+
+                                {% for bid in bids %}
+                                    {% if bid.listing == list and bid.top_bid == True%}
+                                        <div>Top Bid: {{bid.current_bid}} $ </div>
+                                        {% if bid.winner == user %}
+                                            <div style="color:red">-=by you!=-</div>
+                                        {% endif %}  
+                                    {% endif %}
+                                {% endfor %}
+
+                    {% else %} <!--Listing isn't active-->
+                    <a href="listings/{{list.title}}">
+                        <li class="watch-li closed">
+                            <div class="parent">
+    
+                                <div class="flex-container">
+                                    <img class="img-watch" style="filter: grayscale(100%);" src="{{list.picture_url}}">
+                                    <div class="text"> {{list.title}} </div>
+                                </div>
+    
+                                <div class="flex-container">
+                                    <strong style="color:red"> CLOSED </strong>
+
+                                    {% for bid in bids %}
+                                        {% if bid.listing == list and bid.top_bid == True%}
+                                            Sold for: {{bid.current_bid}} $ 
+                                            {% if bid.winner == user %}
+                                                <div style="color:red">-=to you!=-</div>
+                                            {% endif %}  
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+
+                                <form action="{% url 'view' title=list.title %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="submit" class="yellow-button" name="remove-watchlist-outer-call" value="Remove">
+                                </form>
+
+                            </div>
+                        </li>
+                    </a>
+                    {% empty %}
+                        <div class="mini-title" style="text-align: center;">
+                            No items in watchlist yet. 
+                        </div>
+                        <div class="mini-title" style="text-align: center;">
+                            Go to listings to add one
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </ul>
+    
+
+{% endblock body%}

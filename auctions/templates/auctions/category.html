@@ -1,21 +1,24 @@
 {% extends "auctions/layout.html" %}
-
 {% block body %}
 
-<div class="flex-container">
-    <ul>
-        {% for list in listings %}
-            {% if list.active %}
-                <div class="index-list"><a href="listings/{{list.title}}">
+{% for cat in categories %}
+
+    
+    <div class="flex-container">
+        <h1>{{cat.category}}</h1>
+        <ul>
+            {% for list in listings %}
+            {% if list.active and list.category == cat%}
+                <div class="index-list"><a href="/listings/{{list.title}}">
                     <div class="parent">
-                        <li><img class="index-img" src="{{list.picture_url}}"></li>
+                        <li><img src="{{list.picture_url}}" width="300px"></li>
                         <div>
                             <div class="mini-title">{{list.title}}</div>
-                            {{list.description|truncatechars:300 }}
+                            {{list.description|truncatechars:255 }}
                         </div>
                     </div>
                     <div class="parent low">
-                        <div class="low-text"> by: <strong>{{list.seller}}</strong>.&nbsp Starting price: {{list.price}} $ </div>
+                        <div class="low-text"> by: {{list.seller}}. - Starting price: {{list.price}} $ </div>
                         {% for bid in bids %}
                             {% if bid.listing == list and bid.top_bid == True%}
                                 <div class="low-text"> --> Top Bid: {{bid.current_bid}} $ </div>
@@ -25,6 +28,8 @@
                 </div></a>
             {% endif %}    
         {% endfor %}
-    </ul>
-</div>
+        </ul>
+    </div>
+{% endfor %}
+
 {% endblock body%}

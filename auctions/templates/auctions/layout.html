@@ -5,37 +5,46 @@
     <head>
         <title>{% block title %}Auctions{% endblock %}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="/static/auctions/favicon.ico" rel="icon">
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
     </head>
     <body>
-        <h1>Auctions</h1>
-        <div>
-            {% if user.is_authenticated %}
-                Signed in as <strong>{{ user.username }}</strong>.
-            {% else %}
-                Not signed in.
-            {% endif %}
-        </div>
+    <div class="sky-back"></div>
+    <div class="top-shelf">
         <ul class="nav">
+            <h1><a class="great-link" href="{% url 'index' %}">Auctions</a></h1>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'allCategories' %}">Categories</a>
+            </li>
             {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                    <a class="nav-link" href="{% url 'create' %}">New Listing</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'create' %}">Create New Listing</a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                    <a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    <a class="nav-link" href="{% url 'closed' %}">Closed Auctions</a>
                 </li>
             {% endif %}
         </ul>
+
+        <div class="parent right" style="gap:5px;">
+            {% if user.is_authenticated %}
+                <div class="text">Signed in as <strong>{{ user.username }}</strong>.</div>
+                <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+            {% else %}
+                <div class="text"><strong>Not signed in.</strong></div>
+                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+            {% endif %}
+        </div>
+    </div>
+    
+
         <hr>
         {% block body %}
         {% endblock %}

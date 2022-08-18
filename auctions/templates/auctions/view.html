@@ -9,46 +9,112 @@
     {% block body %}
         <div class="flex-container">
             {% for item in desc%}
-            <div><h1>{{item.title}}</h1> Seller: {{item.seller}}</div>
+            <div style="display:grid; text-align: center;">
+                <h1>{{item.title}}</h1> 
+                <div class="parent">
+                    Seller: {{item.seller}}.
+                    {% if user.is_authenticated and item.active %}
+                        {% if not item.seller == user %}
+                            <form action="{% url 'view' title=item.title %}" method="post"> 
+                                {% csrf_token %}
+                                {% if user in item.watching.all %} <!-- check for ManyToMany field-->
+                                    <input type="submit" class="yellow-button" name="remove-watchlist-button" value="Remove from Watchlist">
+                                {% else %}    
+                                    <input type="submit" class="std-button" name="watchlist-button" value="Add to Watchlist">
+                                {% endif %}
+                            </form>
+                        {% else %}
+                            <form action="{% url 'view' title=item.title %}" method="post"> 
+                                {% csrf_token %}    
+                                <input type="submit" class="std-button" name="edit-button" value="Edit">
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+            </div>
             <div class="parent">
-                <img src="{{item.picture_url}}" width="600px">
+                <img class="view-img" src="{{item.picture_url}}">
                 <div>
-                    <div class="descr">{{item.description}}{{name}}</div>
-                    <div class="category">Category: {{item.category}}</div>
+                    <div class="descr">{{item.description}}</div>
+                    <div class="category"><a href="/categories/{{item.category}}"> Category: {{item.category}}</a></div>
                 </div>
             </div>
-                <div>
-                    Starting price: {{item.price}} COP.
+                {% if item.active %}
+                <div class="parent">
+                    <div class="text"> Starting price: {{item.price}} $. </div>
                     {% for bid in bids %}
-                        {{bid.number_of_bids}} bid(s) made. 
-                        Current price: {{bid.current_bid}} COP 
+                        <div class="text"> {{bid.number_of_bids}} bid(s) made. </div>
+                        <div class="text"> Top Bid: {{bid.current_bid}} $ </div>
                     {% empty %}
                     {% endfor %}
                 </div>
+                {% else %}
+                    {% for bid in bids %}
+                    <div class="text"> {{bid.number_of_bids}} bid(s) made. </div> 
+                        <h4>Sold for: {{bid.current_bid}} $ </h4>
+                        {% if message%}
+                            <h6 class="messages bad" style="text-align: center;">{{message}}</h6>
+                        {% endif %}
+                        {% if bid.winner == user %}
+                            <h5 class="message good">You won this auction!</h5>
+                        {% endif %}
+                    {% empty %}
+                    {% endfor %}
+                {% endif %}
+            
+        {% if user.is_authenticated and item.active %}
             <div class="parent">
                 <div>
                     <form action="{% url 'view' title=item.title %}" method="post">
                         {% csrf_token %}
-                    <input type="number" min="0" name="bid" placeholder="Your Bid"> 
-                    <input type="submit" name="bid-button" value="Bid">
+                    {% if not item.seller == user %}
+                    $    
+                    <input class="inputField" type="number" min="0" max="10000000" name="bid" placeholder="Your Bid"> 
+                        <input type="submit" class="std-button bid-button" name="bid-button" value="Bid">
+                    {% else %}
+                    <div class="parent">
+                        <div class="text">It's your item.</div> 
+                        <input type="submit" class="yellow-button" name="close-button" value="Close Auction">
+                    </div>
+                    {% endif %}
                 </div>
                 <div>   
                     {% if top == "yes"%} 
-                        <h6 class="messages good" >Your bid is the highest</h6> 
-                    {% endif %}
-                    {% if message%}
-                        <h6 class="messages bad" >{{message}}</h6>
+                        <h6 class="messages good"> Your bid is the highest</h6> 
                     {% endif %}
                 </div>
             </div>
-                
-            {% endfor %}
+        {% endif %}
+    
+        <div class="parent-comment">
+            <!--reversed comments list-->
+            <div class="comment-list">
+                {% for com in coms reversed %}
+
+                    <div><strong>{{com.autor}} : </strong></div> 
+                    <div class="comment"> {{com.text}} </div>
+
+                {% endfor %}
+            </div>
+            {% if user.is_authenticated and item.active %}
             <div class="comment-container">
-                <input type="text" name="comment" class="comment-field" placeholder="Your comment">
-                <input type="submit" name="submit-comment" value="Comment">
+                <textarea onkeyup="textAreaAdjust(this)" class="inputComment" name="comment" class="comment-field" placeholder="Your comment" maxlength="500"></textarea>
+                <input type="submit" class="grey-button" name="submit-comment" value="Comment">
             </form>
+            </div>
+            {% elif not user.is_authenticated %}
+                <h6 class="messages bad" >You're not authenticated. Login to bid and comment on that item.</h6>
+            {% endif %}
+        {% endfor %}
+
         </div>
-    {% for com in coms %}
-        <div>{{com.autor}} : <input type="text" value="{{com.text}}"></div>
-    {% endfor %}
+
+<script>
+    function textAreaAdjust(element) {
+    element.style.height = "1px";
+    element.style.height = (25+element.scrollHeight)+"px";
+    }
+</script>
+
 {% endblock body %}

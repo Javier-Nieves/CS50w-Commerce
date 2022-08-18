@@ -1,0 +1,40 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}Edit listing{% endblock %}
+
+{% block body %}
+{% for item in listing %}
+    
+    <form action="{% url 'edit' item.title %}" method="post">
+        <div class="flex-container">
+            <h1>Edit listing</h1>
+            <input name="title" type="text" value="{{item.title}}" class="medium-field" required>
+            {% csrf_token %}
+                <div class="parent">
+                    <div class="flex-container create">
+                        <input name="image-url" type="text" value="{{item.picture_url}}" class="small-field">
+                        <div class="parent" style="padding:0"> 
+                            <span>$</span>
+                            <input type="number" name="price" value="{{item.price}}" min="0" class="small-field" min="0" required>
+                        </div>
+                        <select name="category" class="small-field" style="font-size: 17px;">
+                            <option selected>{{item.category}}</option>
+                            {% for i in categories%}
+                            <option value="{{i.category}}">{{i.category}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <textarea name="description" class="descr" required>{{item.description}}</textarea>
+                </div>
+            <div class="parent">
+                <input type="submit" name="edit" class="std-button" value="Save Changes">
+            </form>
+                <form action="{% url 'view' item.title %}">
+                    <input type="submit" name="cancel" class="grey-button" value="Cancel">
+                </form>
+            </div>
+        </div>
+
+
+{% endfor %}
+{% endblock body %}

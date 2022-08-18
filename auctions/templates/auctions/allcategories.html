@@ -1,0 +1,17 @@
+{% extends "auctions/layout.html" %}
+{% block body %}
+
+<div class="flex-container">
+    <h1>Categories</h1>
+    <ul>
+        {% for cat in categories %}
+            {% if cat.quantity > 0 %}
+                <div class="category"><a class="cat-list" href="categories/{{cat.category}}">
+                <li>{{cat.category}} ({{cat.quantity}})</li>
+                </div></a>       
+            {% endif %}    
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock body%}
