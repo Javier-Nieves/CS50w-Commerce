@@ -46,6 +46,7 @@
                     {% for bid in bids %}
                         <div class="text"> {{bid.number_of_bids}} bid(s) made. </div>
                         <div class="text"> Top Bid: {{bid.current_bid}} $ </div>
+                        <input type="hidden" id="top-bid" value="{{bid.current_bid}}">
                     {% empty %}
                     {% endfor %}
                 </div>
@@ -75,7 +76,9 @@
                     {% else %}
                     <div class="parent">
                         <div class="text">It's your item.</div> 
-                        <input type="submit" class="yellow-button" name="close-button" value="Close Auction">
+                        {% for bid in bids %}
+                        <input type="submit" onclick="CloseAuction()" class="yellow-button" name="close-button" value="Close Auction">
+                        {% endfor %}
                     </div>
                     {% endif %}
                 </div>
@@ -107,13 +110,17 @@
                 <h6 class="messages bad" >You're not authenticated. Login to bid and comment on that item.</h6>
             {% endif %}
         {% endfor %}
-
+        
         </div>
 
 <script>
     function textAreaAdjust(element) {
-    element.style.height = "1px";
-    element.style.height = (25+element.scrollHeight)+"px";
+        element.style.height = "1px";
+        element.style.height = (25+element.scrollHeight)+"px";
+    }
+    function CloseAuction() {
+        const top_bid = document.querySelector('#top-bid').value;
+        alert(`Closing auction! Top bid = $ ${top_bid}`);
     }
 </script>
 
