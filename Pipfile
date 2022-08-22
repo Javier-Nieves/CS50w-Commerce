@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 django = "4.1"
 gunicorn = "*"
-dj-database-url = "1.0.0"
 
 [dev-packages]
 
