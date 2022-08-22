@@ -76,6 +76,7 @@ defusedxml @ file:///tmp/build/80754af9/defusedxml_1615228127516/work
 diff-match-patch @ file:///Users/ktietz/demo/mc3/conda-bld/diff-match-patch_1630511840874/work
 distlib==0.3.5
 distributed @ file:///opt/conda/conda-bld/distributed_1647271944416/work
+dj-database-url==1.0.0
 Django==4.0.6
 docopt==0.6.2
 docutils @ file:///opt/concourse/worker/volumes/live/c87e10af-317d-45cb-7142-3d02053858ee/volume/docutils_1620827978243/work
