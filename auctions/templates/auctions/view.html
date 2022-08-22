@@ -54,9 +54,6 @@
                     {% for bid in bids %}
                     <div class="text"> {{bid.number_of_bids}} bid(s) made. </div> 
                         <h4>Sold for: {{bid.current_bid}} $ </h4>
-                        {% if message%}
-                            <h6 class="messages bad" style="text-align: center;">{{message}}</h6>
-                        {% endif %}
                         {% if bid.winner == user %}
                             <h5 class="message good">You won this auction!</h5>
                         {% endif %}
@@ -82,7 +79,10 @@
                     </div>
                     {% endif %}
                 </div>
-                <div>   
+                <div>
+                    {% if message%}
+                    <h6 class="messages bad" style="text-align: center;">{{message}}</h6>
+                    {% endif %}
                     {% if top == "yes"%} 
                         <h6 class="messages good"> Your bid is the highest</h6> 
                     {% endif %}
@@ -107,7 +107,7 @@
             </form>
             </div>
             {% elif not user.is_authenticated %}
-                <h6 class="messages bad" >You're not authenticated. Login to bid and comment on that item.</h6>
+                <h6 class="messages bad">You're not authenticated. Login to bid and comment on that item.</h6>
             {% endif %}
         {% endfor %}
         
