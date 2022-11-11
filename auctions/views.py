@@ -203,6 +203,7 @@ def first_bid(title):
         return False
     except:
         return True
+    #return not ('current_bid' in bids.first())
 
 def show_page(request, desc, bids, message, top, coms):
     return render(request, "auctions/view.html", {
@@ -227,7 +228,6 @@ def Watcher(request, title, action):
         watchlist_alter.watching.add(watching)
     elif action == "remove":
         watchlist_alter.watching.remove(watching)
-    return True
 
 # ----------------LOGIN and friends
 
